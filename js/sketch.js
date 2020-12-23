@@ -1,40 +1,64 @@
-let mainCanvas;
+let mainCanvas, gridCanvas, dataCanvas;
 let gridResolution = 28;
 let cellSize;
 
 function setup() {
-    setupCanvas();
-    drawGrid(mainCanvas, gridResolution);
+    setupCanvases();
+    addControls();
     fill(0);
-    strokeWeight(cellSize);
 }
 
 function draw() {
 
-    if (mouseIsPressed) {
-        line(mouseX, mouseY, pmouseX, pmouseY);
+    if (mouseIsPressed && (mouseX >= 0 && mouseY >= 0)) {
+        dataCanvas.line(mouseX, mouseY, pmouseX, pmouseY);
+        image(dataCanvas, 0, 0);
     }
 }
 
-function setupCanvas() {
+function setupCanvases() {
+    // Mian canvas
     mainCanvas = createCanvas(windowHeight, windowHeight);
     mainCanvas.style('right', `calc(${windowHeight}px - 100%)`);
     mainCanvas.style('position', `relative`);
     mainCanvas.style('border-left', `1px solid black`);
-    mainCanvas.background(255);
+    background(255);
+
+    cellSize = mainCanvas.width / gridResolution;
+
+    // Grid canvas
+    gridCanvas = createGraphics(mainCanvas.width, mainCanvas.height);
+    gridCanvas.stroke(192, 192, 192, 192);
+    gridCanvas.strokeWeight(1);
+    for (let i = cellSize; i < gridCanvas.width; i += cellSize) {
+        gridCanvas.line(i, 0, i, gridCanvas.height);
+        gridCanvas.line(0, i, gridCanvas.width, i);
+    }
+    image(gridCanvas, 0, 0);
+
+    // Data canvas
+    dataCanvas = createGraphics(mainCanvas.width, mainCanvas.height);
+    dataCanvas.strokeWeight(cellSize);
+    dataCanvas.stroke(0);
+
 }
 
-function drawGrid(canvas, resolution) {
-    cellSize = canvas.width / resolution;
+function addControls() {
+    let clearButton = createButton('Clear');
+    clearButton.mousePressed(clearCanvas);
+    clearButton.position(19, 19);
 
-    push();
-    canvas.stroke(192, 192, 192, 192);
-    canvas.strokeWeight(1);
+    let saveButton = createButton('Save');
+    saveButton.mousePressed(saveImage);
+    saveButton.position(19, 45);
+}
 
-    for (let x = cellSize; x < canvas.width; x += cellSize) {
-        canvas.line(x, 0, x, canvas.height);
-        canvas.line(0, x, canvas.width, x);
-    }
+function clearCanvas() {
+    mainCanvas.background(255);
+    image(gridCanvas, 0, 0);
+    dataCanvas.clear();
+}
 
-    pop();
+function saveImage() {
+    saveCanvas(dataCanvas, 'dataCanvas');
 }
