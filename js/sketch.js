@@ -1,13 +1,19 @@
 let mainCanvas;
 let gridResolution = 28;
+let cellSize;
 
 function setup() {
     setupCanvas();
     drawGrid(mainCanvas, gridResolution);
+    fill(0);
+    strokeWeight(cellSize);
 }
 
 function draw() {
-    // background(0);
+
+    if (mouseIsPressed) {
+        line(mouseX, mouseY, pmouseX, pmouseY);
+    }
 }
 
 function setupCanvas() {
@@ -19,18 +25,15 @@ function setupCanvas() {
 }
 
 function drawGrid(canvas, resolution) {
-    let cWStep = canvas.width / resolution;
-    let cHStep = canvas.height / resolution;
+    cellSize = canvas.width / resolution;
 
     push();
-    canvas.stroke(192, 192, 192);
+    canvas.stroke(192, 192, 192, 192);
     canvas.strokeWeight(1);
 
-    for (let x = cWStep; x < canvas.width; x += cWStep) {
+    for (let x = cellSize; x < canvas.width; x += cellSize) {
         canvas.line(x, 0, x, canvas.height);
-    }
-    for (let y = cHStep; y < canvas.height; y += cHStep) {
-        canvas.line(0, y, canvas.width, y);
+        canvas.line(0, x, canvas.width, x);
     }
 
     pop();
