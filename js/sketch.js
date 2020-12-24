@@ -127,10 +127,12 @@ function drawPixel(x, y, color = 0, standalone = true) {
     // todo draw more efficiently (less loopping)
     for (let i = realValuesPerRowSize * pixelWithDensitySize * y + v - 1; i < realValuesPerRowSize * pixelWithDensitySize * (y + 1); i += v) {
         if (i % (realValuesPerRowSize) > realValuesPerPixelSize * x && i % (realValuesPerRowSize) < realValuesPerPixelSize * (x + 1)) {
-            conf.dataCanvas.pixels[i] = 255;
-            conf.dataCanvas.pixels[i - 1] = blue(255 - color);
-            conf.dataCanvas.pixels[i - 2] = green(255 - color);
-            conf.dataCanvas.pixels[i - 3] = red(255 - color);
+            if (color !== 0) {
+                conf.dataCanvas.pixels[i] = 255;
+                conf.dataCanvas.pixels[i - 1] = blue(255 - color);
+                conf.dataCanvas.pixels[i - 2] = green(255 - color);
+                conf.dataCanvas.pixels[i - 3] = red(255 - color);
+            }
         }
     }
     if (standalone) {
@@ -151,7 +153,8 @@ function getPixel(x, y, standalone = true) {
     let value = 0;
     for (let i = realValuesPerRowSize * pixelWithDensitySize * y + v - 1; i < realValuesPerRowSize * pixelWithDensitySize * (y + 1); i += v) {
         if (i % (realValuesPerRowSize) > realValuesPerPixelSize * x && i % (realValuesPerRowSize) < realValuesPerPixelSize * (x + 1)) {
-            value += map(conf.dataCanvas.pixels[i], 0, 255, 0, 1);
+            value += map(conf.dataCanvas.pixels[i] * (255 - conf.dataCanvas.pixels[i - 1] + 255 - conf.dataCanvas.pixels[i - 2] + 255 - conf.dataCanvas.pixels[i - 3]), 0, 255 * 3 * 255, 0, 1
+            );
         }
     }
     return value / v / conf.cellSize / conf.cellSize;
