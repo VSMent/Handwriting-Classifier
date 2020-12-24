@@ -10,7 +10,8 @@ let conf = {
         v: 4,// values per pixel
         pixelWithDensitySize: undefined,
         realValuesPerPixelSize: undefined,
-        realValuesPerRowSize: undefined
+        realValuesPerRowSize: undefined,
+        draw: false
     }
 };
 
@@ -78,6 +79,10 @@ function addControls() {
     let pixelateButton = createButton('Pixelate');
     pixelateButton.mousePressed(pixelateImage);
     pixelateButton.position(19, 70);
+
+    let pixelateDrawCheckbox = createCheckbox('Draw', false);
+    pixelateDrawCheckbox.changed(() => conf.pix.draw = pixelateDrawCheckbox.checked());
+    pixelateDrawCheckbox.position(90, 72);
 }
 
 function clearCanvas() {
@@ -90,19 +95,21 @@ function saveImage() {
     saveCanvas(conf.dataCanvas, 'dataCanvas');
 }
 
-function pixelateImage() {
+function pixelateImage(draw = false) {
     conf.dataCanvas.loadPixels();
     let squarePixels = [];
     for (let y = 0; y < conf.gridResolution; y++) {
         for (let x = 0; x < conf.gridResolution; x++) {
             let pixelValue = getPixel(x, y, false);
             squarePixels.push(pixelValue);
-            drawPixel(x, y, pixelValue, false);
+            conf.pix.draw || draw && drawPixel(x, y, pixelValue, false);
         }
     }
-    conf.dataCanvas.updatePixels();
-    image(conf.dataCanvas, 0, 0);
-    image(conf.gridCanvas, 0, 0);
+    if (conf.pix.draw || draw) {
+        conf.dataCanvas.updatePixels();
+        image(conf.dataCanvas, 0, 0);
+        image(conf.gridCanvas, 0, 0);
+    }
     console.log(squarePixels);
     return squarePixels;
 }
