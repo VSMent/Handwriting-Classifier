@@ -124,3 +124,21 @@ function drawPixel(x, y, color = 0, standalone = true) {
         image(dataCanvas, 0, 0);
     }
 }
+
+function getPixel(x, y, standalone = true) {
+    if (!(x >= 0 && y >= 0 && x < gridResolution && y < gridResolution)) {
+        return;
+    }
+    let v = configs.pixelate.v;
+    let pixelWithDensitySize = configs.pixelate.pixelWithDensitySize;
+    let realValuesPerPixelSize = configs.pixelate.realValuesPerPixelSize;
+    let realValuesPerRowSize = configs.pixelate.realValuesPerRowSize;
+    standalone && dataCanvas.loadPixels();
+    let value = 0;
+    for (let i = realValuesPerRowSize * pixelWithDensitySize * y + v - 1; i < realValuesPerRowSize * pixelWithDensitySize * (y + 1); i += v) {
+        if (i % (realValuesPerRowSize) > realValuesPerPixelSize * x && i % (realValuesPerRowSize) < realValuesPerPixelSize * (x + 1)) {
+            value += map(dataCanvas.pixels[i], 0, 255, 0, 1);
+        }
+    }
+    return value / v / cellSize / cellSize;
+}
