@@ -89,14 +89,19 @@ function saveImage() {
 
 function pixelateImage() {
     dataCanvas.loadPixels();
-    for (let y = 0; y <= gridResolution; y++) {
-        for (let x = 0; x <= gridResolution; x++) {
+    let squarePixels = [];
+    for (let y = 0; y < gridResolution; y++) {
+        for (let x = 0; x < gridResolution; x++) {
             let pixelValue = getPixel(x, y, false);
+            squarePixels.push(pixelValue);
             drawPixel(x, y, pixelValue, false);
         }
     }
     dataCanvas.updatePixels();
     image(dataCanvas, 0, 0);
+    image(gridCanvas, 0, 0);
+    console.log(squarePixels);
+    return squarePixels;
 }
 
 function drawPixel(x, y, color = 0, standalone = true) {
