@@ -3,17 +3,17 @@ let gridResolution = 28;
 let canvasSize, cellSize;
 let configs = {
     pixelate: {
-        set: false,
-        pd, // pixel density
+        pd: undefined, // pixel density
         v: 4,// values per pixel
-        pixelWithDensitySize,
-        realValuesPerPixelSize,
-        realValuesPerRowSize
+        pixelWithDensitySize: undefined,
+        realValuesPerPixelSize: undefined,
+        realValuesPerRowSize: undefined
     }
 };
 
 function setup() {
     setupCanvases();
+    setupConfigs();
     addControls();
     fill(0);
 }
@@ -33,8 +33,6 @@ function setupCanvases() {
     mainCanvas.style('position', `relative`);
     mainCanvas.style('right', `calc(${canvasSize}px - 100vw)`);
     mainCanvas.style('top', `calc((100vh - ${canvasSize}px) / 2 )`);
-    // mainCanvas.style('width', `${canvasSize*10}px`);
-    // mainCanvas.style('height', `${canvasSize*10}px`);
     mainCanvas.style('border', `1px solid black`);
     background(255);
 
@@ -55,6 +53,14 @@ function setupCanvases() {
     dataCanvas.strokeWeight(cellSize);
     dataCanvas.stroke(0);
 
+}
+
+function setupConfigs() {
+    configs.pixelate.pd = pixelDensity();
+    configs.pixelate.pixelWithDensitySize = cellSize * configs.pixelate.pd;
+    configs.pixelate.realValuesPerPixelSize = configs.pixelate.pixelWithDensitySize * configs.pixelate.v;
+    configs.pixelate.realValuesPerRowSize = gridResolution * configs.pixelate.realValuesPerPixelSize;
+    // let realValuesPerPixelsRow = realValuesPerRowSize * realValuesPerPixelSize;
 }
 
 function addControls() {
@@ -82,40 +88,39 @@ function saveImage() {
 }
 
 function pixelateImage() {
-    if (!configs.pixelate.set) {
-        configs.pixelate.set = true;
-        configs.pixelate.pd = pixelDensity();
-        configs.pixelate.pixelWithDensitySize = cellSize * configs.pixelate.pd;
-        configs.pixelate.realValuesPerPixelSize = configs.pixelate.pixelWithDensitySize * configs.pixelate.v;
-        configs.pixelate.realValuesPerRowSize = gridResolution * configs.pixelate.realValuesPerPixelSize;
-        // let realValuesPerPixelsRow = realValuesPerRowSize * realValuesPerPixelSize;
-    }
-
-    let v = configs.pixelate.v;
-    let pixelWithDensitySize = configs.pixelate.pixelWithDensitySize;
-    let realValuesPerPixelSize = configs.pixelate.realValuesPerPixelSize;
-    let realValuesPerRowSize = configs.pixelate.realValuesPerRowSize;
-
     dataCanvas.loadPixels();
-    let canvasPixelCount = dataCanvas.pixels.length;
-    let squarePixels = [];
-    for (let i = v - 1; i <= canvasPixelCount; i += v) {
-        // r -3
-        // g -2
-        // b -1
-        // a
-
-        if (
-            (i % (realValuesPerRowSize) > realValuesPerPixelSize * 9 && i % (realValuesPerRowSize) < realValuesPerPixelSize * 10)
-            && (i > realValuesPerRowSize * pixelWithDensitySize * 5 && i < realValuesPerRowSize * pixelWithDensitySize * 6)
-        ) {
-            dataCanvas.pixels[i] = 255;
-            dataCanvas.pixels[i - 1] = 0;
-            dataCanvas.pixels[i - 2] = 0;
-            dataCanvas.pixels[i - 3] = 255;
-            squarePixels.push(i);
+    for (let y = 0; y <= gridResolution; y++) {
+        for (let x = 0; x <= gridResolution; x += 2) {
+            if (y % 2 === 0) {
+                drawPixel(x, y, x * y / 3 - 6, false);
+            } else {
+                drawPixel(x + 1, y, x * y / 3 - 6, false);
+            }
         }
     }
     dataCanvas.updatePixels();
     image(dataCanvas, 0, 0);
+}
+
+function drawPixel(x, y, color = 0, standalone = true) {
+    if (!(x >= 0 && y >= 0 && x < gridResolution && y < gridResolution)) {
+        return;
+    }
+    let v = configs.pixelate.v;
+    let pixelWithDensitySize = configs.pixelate.pixelWithDensitySize;
+    let realValuesPerPixelSize = configs.pixelate.realValuesPerPixelSize;
+    let realValuesPerRowSize = configs.pixelate.realValuesPerRowSize;
+    standalone && dataCanvas.loadPixels();
+    for (let i = realValuesPerRowSize * pixelWithDensitySize * y + v - 1; i < realValuesPerRowSize * pixelWithDensitySize * (y + 1); i += v) {
+        if (i % (realValuesPerRowSize) > realValuesPerPixelSize * x && i % (realValuesPerRowSize) < realValuesPerPixelSize * (x + 1)) {
+            dataCanvas.pixels[i] = 255;
+            dataCanvas.pixels[i - 1] = blue(color);
+            dataCanvas.pixels[i - 2] = green(color);
+            dataCanvas.pixels[i - 3] = red(color);
+        }
+    }
+    if (standalone) {
+        dataCanvas.updatePixels();
+        image(dataCanvas, 0, 0);
+    }
 }
