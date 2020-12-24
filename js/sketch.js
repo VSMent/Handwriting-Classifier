@@ -251,5 +251,7 @@ function initNetwork() {
 }
 
 function guessCharacter() {
-    conf.net.outLabelElt.html(brain.likely(pixelateImage(), conf.net.nn));
+    conf.net.outLabelElt.html('_');
+    let newLabel = brain.likely(pixelateImage(), conf.net.nn);
+    setTimeout(() => conf.net.outLabelElt.html(newLabel), 500);
 }
