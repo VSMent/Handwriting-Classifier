@@ -90,12 +90,9 @@ function saveImage() {
 function pixelateImage() {
     dataCanvas.loadPixels();
     for (let y = 0; y <= gridResolution; y++) {
-        for (let x = 0; x <= gridResolution; x += 2) {
-            if (y % 2 === 0) {
-                drawPixel(x, y, x * y / 3 - 6, false);
-            } else {
-                drawPixel(x + 1, y, x * y / 3 - 6, false);
-            }
+        for (let x = 0; x <= gridResolution; x++) {
+            let pixelValue = getPixel(x, y, false);
+            drawPixel(x, y, pixelValue, false);
         }
     }
     dataCanvas.updatePixels();
@@ -106,17 +103,19 @@ function drawPixel(x, y, color = 0, standalone = true) {
     if (!(x >= 0 && y >= 0 && x < gridResolution && y < gridResolution)) {
         return;
     }
+    color = map(color, 0, 1, 0, 255);
     let v = configs.pixelate.v;
     let pixelWithDensitySize = configs.pixelate.pixelWithDensitySize;
     let realValuesPerPixelSize = configs.pixelate.realValuesPerPixelSize;
     let realValuesPerRowSize = configs.pixelate.realValuesPerRowSize;
     standalone && dataCanvas.loadPixels();
+    // todo draw more efficiently (less loopping)
     for (let i = realValuesPerRowSize * pixelWithDensitySize * y + v - 1; i < realValuesPerRowSize * pixelWithDensitySize * (y + 1); i += v) {
         if (i % (realValuesPerRowSize) > realValuesPerPixelSize * x && i % (realValuesPerRowSize) < realValuesPerPixelSize * (x + 1)) {
             dataCanvas.pixels[i] = 255;
-            dataCanvas.pixels[i - 1] = blue(color);
-            dataCanvas.pixels[i - 2] = green(color);
-            dataCanvas.pixels[i - 3] = red(color);
+            dataCanvas.pixels[i - 1] = blue(255 - color);
+            dataCanvas.pixels[i - 2] = green(255 - color);
+            dataCanvas.pixels[i - 3] = red(255 - color);
         }
     }
     if (standalone) {
