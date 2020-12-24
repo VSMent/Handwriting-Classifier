@@ -11,7 +11,7 @@ let conf = {
         pixelWithDensitySize: undefined,
         realValuesPerPixelSize: undefined,
         realValuesPerRowSize: undefined,
-        draw: false
+        isForDemonstration: false
     }
 };
 
@@ -81,7 +81,7 @@ function addControls() {
     pixelateButton.position(19, 70);
 
     let pixelateDrawCheckbox = createCheckbox('Draw', false);
-    pixelateDrawCheckbox.changed(() => conf.pix.draw = pixelateDrawCheckbox.checked());
+    pixelateDrawCheckbox.changed(() => conf.pix.isForDemonstration = pixelateDrawCheckbox.checked());
     pixelateDrawCheckbox.position(90, 72);
 }
 
@@ -95,20 +95,19 @@ function saveImage() {
     saveCanvas(conf.dataCanvas, 'dataCanvas');
 }
 
-function pixelateImage(draw = false) {
+function pixelateImage(isForDemonstration = false) {
     conf.dataCanvas.loadPixels();
     let squarePixels = [];
     for (let y = 0; y < conf.gridResolution; y++) {
         for (let x = 0; x < conf.gridResolution; x++) {
             let pixelValue = getPixel(x, y, false);
             squarePixels.push(pixelValue);
-            (conf.pix.draw || draw) && drawPixel(x, y, pixelValue, false);
+            (conf.pix.isForDemonstration || isForDemonstration) && drawPixel(x, y, pixelValue, false);
         }
     }
-    if (conf.pix.draw || draw) {
+    if (conf.pix.isForDemonstration || isForDemonstration) {
         conf.dataCanvas.updatePixels();
         image(conf.dataCanvas, 0, 0);
-        image(conf.gridCanvas, 0, 0);
     }
     console.log(squarePixels);
     return squarePixels;
@@ -146,6 +145,7 @@ function getPixel(x, y, standalone = true) {
         return;
     }
     let v = conf.pix.v;
+    let pd = conf.pix.pd;
     let pixelWithDensitySize = conf.pix.pixelWithDensitySize;
     let realValuesPerPixelSize = conf.pix.realValuesPerPixelSize;
     let realValuesPerRowSize = conf.pix.realValuesPerRowSize;
@@ -153,9 +153,17 @@ function getPixel(x, y, standalone = true) {
     let value = 0;
     for (let i = realValuesPerRowSize * pixelWithDensitySize * y + v - 1; i < realValuesPerRowSize * pixelWithDensitySize * (y + 1); i += v) {
         if (i % (realValuesPerRowSize) > realValuesPerPixelSize * x && i % (realValuesPerRowSize) < realValuesPerPixelSize * (x + 1)) {
-            value += map(conf.dataCanvas.pixels[i] * (255 - conf.dataCanvas.pixels[i - 1] + 255 - conf.dataCanvas.pixels[i - 2] + 255 - conf.dataCanvas.pixels[i - 3]), 0, 255 * 3 * 255, 0, 1
+            value += map(
+                conf.dataCanvas.pixels[i] * (
+                    255 - conf.dataCanvas.pixels[i - 1]
+                    + 255 - conf.dataCanvas.pixels[i - 2]
+                    + 255 - conf.dataCanvas.pixels[i - 3]
+                ),
+                0, 255 * 3 * 255,
+                0, 1
             );
+            // console.log(conf.dataCanvas.pixels[i], conf.dataCanvas.pixels[i - 1], conf.dataCanvas.pixels[i - 2], conf.dataCanvas.pixels[i - 3]);
         }
     }
-    return value / v / conf.cellSize / conf.cellSize;
+    return value / pd / pd / conf.cellSize / conf.cellSize;
 }
