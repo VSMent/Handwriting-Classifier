@@ -102,7 +102,7 @@ function pixelateImage(draw = false) {
         for (let x = 0; x < conf.gridResolution; x++) {
             let pixelValue = getPixel(x, y, false);
             squarePixels.push(pixelValue);
-            conf.pix.draw || draw && drawPixel(x, y, pixelValue, false);
+            (conf.pix.draw || draw) && drawPixel(x, y, pixelValue, false);
         }
     }
     if (conf.pix.draw || draw) {
