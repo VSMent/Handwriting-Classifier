@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "train": "nodemon -q train.js",
+    "train": "node train.js",
     "start": "nodemon -q index.js"
   },
   "repository": {
