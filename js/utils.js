@@ -53,8 +53,15 @@ function saveNet(jsonObj, name = 'net') {
     console.log(`Network was successfully saved to "${name}.json"`)
 }
 
+function loadNet(name = 'net') {
+    let jsonStr = JSON.parse(fs.readFileSync(`./json/${name}.json`));
+    console.log(`Network was successfully loaded from "${name}.json"`)
+    return jsonStr;
+}
+
 module.exports = {
     loadDataset,
     drawToCli,
-    saveNet
+    saveNet,
+    loadNet
 }
