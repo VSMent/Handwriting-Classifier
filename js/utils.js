@@ -23,6 +23,22 @@ function scaleDown(arr) {
     return newArr;
 }
 
+function drawToCli(image) {
+    const shades = ' .:-=+*#%@';
+    console.log(`+${'-'.repeat(28)}+`);
+    for (let i = 0; i < 28; i++) {
+        let line = '';
+        for (let j = 0; j < 28; j++) {
+            let value = image[i * 28 + j];
+            value = value !== 0 ? value - 0.0001 : value;
+            value = Math.floor(value * 10);
+            line += shades[value];
+        }
+        console.log(`|${line}|`);
+    }
+    console.log(`+${'-'.repeat(28)}+`);
+}
+
 function initNetwork() {
     // loadDataset('balanced');
     // loadDataset('byclass');
@@ -93,7 +109,6 @@ function guessCharacter() {
     setTimeout(() => conf.net.outLabelElt.html(newLabel), 500);
 }
 
-
 function getDatasetValues(name, id) {
     if (Object.getOwnPropertyNames(conf.datasets.loaded).length !== 0) {
         if (conf.datasets.loaded[`l${name}`] !== undefined && conf.datasets.loaded[`i${name}`] !== undefined
@@ -107,7 +122,7 @@ function getDatasetValues(name, id) {
     }
 }
 
-
 module.exports = {
-    loadDataset
+    loadDataset,
+    drawToCli
 }
