@@ -23,6 +23,36 @@ let conf = {
         imgOffset: 16,
         labelOffset: 8,
         loaded: {},
+        balanced: {
+            trIP: 'EMNIST/balanced/emnist-balanced-train-images-idx3-ubyte',      // train images path
+            trLP: 'EMNIST/balanced/emnist-balanced-train-labels-idx1-ubyte',      // train labels path
+            teIP: 'EMNIST/balanced/emnist-balanced-test-images-idx3-ubyte',       // test images path
+            teLP: 'EMNIST/balanced/emnist-balanced-test-labels-idx1-ubyte'        // test labels path
+        },
+        byclass: {
+            trIP: 'EMNIST/byclass/emnist-byclass-train-images-idx3-ubyte',      // train images path
+            trLP: 'EMNIST/byclass/emnist-byclass-train-labels-idx1-ubyte',      // train labels path
+            teIP: 'EMNIST/byclass/emnist-byclass-test-images-idx3-ubyte',       // test images path
+            teLP: 'EMNIST/byclass/emnist-byclass-test-labels-idx1-ubyte'        // test labels path
+        },
+        bymerge: {
+            trIP: 'EMNIST/bymerge/emnist-bymerge-train-images-idx3-ubyte',      // train images path
+            trLP: 'EMNIST/bymerge/emnist-bymerge-train-labels-idx1-ubyte',      // train labels path
+            teIP: 'EMNIST/bymerge/emnist-bymerge-test-images-idx3-ubyte',       // test images path
+            teLP: 'EMNIST/bymerge/emnist-bymerge-test-labels-idx1-ubyte'        // test labels path
+        },
+        digits: {
+            trIP: 'EMNIST/digits/emnist-digits-train-images-idx3-ubyte',      // train images path
+            trLP: 'EMNIST/digits/emnist-digits-train-labels-idx1-ubyte',      // train labels path
+            teIP: 'EMNIST/digits/emnist-digits-test-images-idx3-ubyte',       // test images path
+            teLP: 'EMNIST/digits/emnist-digits-test-labels-idx1-ubyte'        // test labels path
+        },
+        letters: {
+            trIP: 'EMNIST/letters/emnist-letters-train-images-idx3-ubyte',      // train images path
+            trLP: 'EMNIST/letters/emnist-letters-train-labels-idx1-ubyte',      // train labels path
+            teIP: 'EMNIST/letters/emnist-letters-test-images-idx3-ubyte',       // test images path
+            teLP: 'EMNIST/letters/emnist-letters-test-labels-idx1-ubyte'        // test labels path
+        },
         mnist: {
             trIP: 'EMNIST/mnist/emnist-mnist-train-images-idx3-ubyte',      // train images path
             trLP: 'EMNIST/mnist/emnist-mnist-train-labels-idx1-ubyte',      // train labels path
@@ -253,6 +283,11 @@ function trainNetwork() {
 }
 
 function initNetwork() {
+    // loadDataset('balanced');
+    // loadDataset('byclass');
+    // loadDataset('bymerge');
+    // loadDataset('digits');
+    // loadDataset('letters');
     loadDataset('mnist');
     conf.net.trainData = [
         {
