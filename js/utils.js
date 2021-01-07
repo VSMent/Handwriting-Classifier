@@ -9,7 +9,7 @@ function loadDataset(name = 'mnist', type = 'train') {
     for (let i = 0; i < labels.length; i++) {
         ds.push({
             output: {[labels[i]]: 1},
-            input: scaleDown(images.slice(i * imageBytes, (i + 1) * imageBytes))
+            input: rotate(scaleDown(images.slice(i * imageBytes, (i + 1) * imageBytes)))
         });
     }
     return ds;
@@ -37,6 +37,16 @@ function drawToCli(image) {
         console.log(`|${line}|`);
     }
     console.log(`+${'-'.repeat(28)}+`);
+}
+
+function rotate(arr) {
+    let newArr = [];
+    for (let i = 0; i < 28; i++) {
+        for (let j = 0; j < 28; j++) {
+            newArr[j * 28 + i] = arr[i * 28 + j];
+        }
+    }
+    return newArr;
 }
 
 function initNetwork() {
