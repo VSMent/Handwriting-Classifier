@@ -1,0 +1,20 @@
+{
+  "name": "Handwriting-Classifier",
+  "version": "1.0.0",
+  "description": "[GH-PAGES](https://vsment.github.io/Handwriting-Classifier/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VSMent/Handwriting-Classifier.git"
+  },
+  "keywords": [],
+  "author": "VSMent",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VSMent/Handwriting-Classifier/issues"
+  },
+  "homepage": "https://github.com/VSMent/Handwriting-Classifier#readme"
+}
