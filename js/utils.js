@@ -59,9 +59,20 @@ function loadNet(name = 'net') {
     return jsonStr;
 }
 
+function topNPredictions(obj, n = 3) {
+    let entries = Object.entries(obj);
+    entries.sort((a, b) => {
+        if (a[1] > b[1]) return -1;
+        if (a[1] === b[1]) return 0;
+        if (a[1] < b[1]) return 1;
+    });
+    return entries.slice(0, n).map(e => [e[0], Math.round(e[1] * 1000) / 1000]);
+}
+
 module.exports = {
     loadDataset,
     drawToCli,
     saveNet,
-    loadNet
+    loadNet,
+    topNPredictions
 }
