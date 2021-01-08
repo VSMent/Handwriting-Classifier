@@ -16,7 +16,7 @@ let conf = {
     net: {
         currentLabelText: '',
         outLabelElt: undefined,
-        nn: undefined,
+        nn: new brain.NeuralNetwork(),
         trainData: []
     }
 };
@@ -232,7 +232,7 @@ function getPixel(x, y, standalone = true) {
 
 function initNetwork() {
     let path = 'json/mnist_003.json';
-    loadJSON(path, (r) => conf.net.json=r, () => console.error(`cant load ${path}`));
+    loadJSON(path, (r) => conf.net.nn.fromJSON(r), () => console.error(`cant load ${path}`));
 }
 
 function guessCharacter() {

@@ -30044,7 +30044,7 @@ highp float nrand(highp vec2 n) {
 	    key: "fromJSON",
 	    value: function fromJSON(json) {
 	      Object.assign(this, this.constructor.defaults, json);
-	      this.sizes = json.sizes;
+	      this.sizes = json.layers;
 	      this.initialize();
 
 	      for (var i = 0; i <= this.outputLayer; i++) {
