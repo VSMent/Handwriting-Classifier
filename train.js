@@ -13,7 +13,9 @@ datasets.loaded.balancedTr = loadDataset('train', 'balanced');
 let trainData = [...datasets.loaded.balancedTr];
 net.train(trainData, {
     log: true,
-    errorThresh: 0.003,
+    iterations: 45000,
+    learningRate: 0.007,
+    errorThresh: 0.000001,
 });
 
 const dateAfter = new Date();
@@ -21,13 +23,13 @@ const seconds = Math.floor((dateAfter - (dateBefore)) / 1000);
 const minutes = Math.floor(seconds / 60);
 const hours = Math.floor(minutes / 60);
 console.log(`It took ${hours}:${minutes}:${seconds} to train net`)
-saveNet(net.toJSON(), 'balanced_003');
+saveNet(net.toJSON(), 'balanced_i45k_lr007_et10e-6');
 
 // balanced
 // Total errors: 3361 from 18800
 // Error rate: 0.17877659574468086
 
-net.fromJSON(loadNet('balanced_003'));
+net.fromJSON(loadNet('balanced_i45k_lr007_et10e-6'));
 
 datasets.loaded.balancedTe = loadDataset('test', 'balanced');
 let testData = [...datasets.loaded.balancedTe];
